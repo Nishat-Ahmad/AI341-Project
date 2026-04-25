@@ -34,7 +34,7 @@ def load_trained_model(model_path: Path, device: torch.device) -> Tuple[nn.Modul
 
 def classify_car_type(
     image_path: str,
-    model_path: str = "best_body_classifier.pth",
+    model_path: str = "weights/model a/best_body_classifier.pth",
 ) -> Tuple[str, float]:
     """Classify car body type from image.
 
