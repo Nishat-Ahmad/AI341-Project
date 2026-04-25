@@ -53,6 +53,7 @@ data/model a/train/
 data/model a/test/
 data/model a/valid/
 data/model b/damage_assessment/
+data/model b/whole_pool/
 data/raw/
 data/processed/
 
