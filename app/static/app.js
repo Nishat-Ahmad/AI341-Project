@@ -52,7 +52,18 @@ form.addEventListener('submit', async (event) => {
 
 loadDemo.addEventListener('click', () => {
     const destination = form.querySelector('input[name="destination"]');
-    destination.value = 'Lahore Airport';
+    const userDestination = window.prompt('Enter destination for demo:', destination.value || '');
+    if (userDestination === null) {
+        return;
+    }
+
+    destination.value = userDestination.trim();
+    if (!destination.value) {
+        setStatus('Destination required', 'danger');
+        setOutput('Please enter a destination before running dispatch check.');
+        return;
+    }
+
     setStatus('Demo ready', 'neutral');
     setOutput('Select 5 sample images and click Run Dispatch Check.');
 });

@@ -16,10 +16,13 @@ from utils.routing_service import RoutingServiceError
 app = FastAPI(title="Fleet-Vision API", version="1.0.0")
 
 root_dir = Path(__file__).resolve().parents[1]
-static_dir = root_dir / "app" / "static"
+static_dir = root_dir / "app"
+outputs_dir = root_dir / "outputs"
 
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+if outputs_dir.exists():
+    app.mount("/outputs", StaticFiles(directory=outputs_dir), name="outputs")
 
 app.add_middleware(
     CORSMiddleware,
@@ -52,8 +55,11 @@ async def request_ride(
     left: UploadFile = File(...),
     right: UploadFile = File(...),
     roof: UploadFile = File(...),
+    start_location: str = Form(...),
     destination: str = Form(...),
 ) -> dict:
+    if not start_location.strip():
+        raise HTTPException(status_code=400, detail="Start location cannot be empty.")
     if not destination.strip():
         raise HTTPException(status_code=400, detail="Destination cannot be empty.")
 
@@ -78,7 +84,11 @@ async def request_ride(
                 shutil.copyfileobj(upload.file, f)
             image_paths[angle] = str(output_path)
 
-        report = await orchestrator.run(image_paths=image_paths, destination=destination)
+        report = await orchestrator.run(
+            image_paths=image_paths,
+            start_location=start_location.strip(),
+            destination=destination.strip(),
+        )
         return report
 
     except RoutingServiceError as exc:
