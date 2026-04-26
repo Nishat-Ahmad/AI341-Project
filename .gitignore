@@ -58,12 +58,12 @@ data/raw/
 data/processed/
 
 # ===== Model Weights & Checkpoints =====
-weights/**/*.pth
-weights/**/*.pt
-weights/**/*.ckpt
 *.pth
 *.pt
 *.ckpt
+!weights/**/*.pth
+!weights/**/*.pt
+!weights/**/*.ckpt
 checkpoints/
 
 # ===== Jupyter Notebooks =====
