@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet-Vision AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="header">
+            <h1>Fleet-Vision AI <span>|</span> Verified Dispatch</h1>
+        </header>
+
+        <section class="upload-section card">
+            <h2>Vehicle Capture</h2>
+            <p class="muted">Upload all 5 angles or drag-and-drop each image card.</p>
+            <div class="upload-grid" id="uploadGrid">
+                <label class="upload-slot" data-key="front">
+                    <input type="file" accept="image/*" hidden>
+                    <div class="slot-icon">📷</div>
+                    <div class="slot-title">Front</div>
+                    <div class="slot-file">Drop or click</div>
+                </label>
+                <label class="upload-slot" data-key="back">
+                    <input type="file" accept="image/*" hidden>
+                    <div class="slot-icon">📷</div>
+                    <div class="slot-title">Back</div>
+                    <div class="slot-file">Drop or click</div>
+                </label>
+                <label class="upload-slot" data-key="left">
+                    <input type="file" accept="image/*" hidden>
+                    <div class="slot-icon">📷</div>
+                    <div class="slot-title">Left Side</div>
+                    <div class="slot-file">Drop or click</div>
+                </label>
+                <label class="upload-slot" data-key="right">
+                    <input type="file" accept="image/*" hidden>
+                    <div class="slot-icon">📷</div>
+                    <div class="slot-title">Right Side</div>
+                    <div class="slot-file">Drop or click</div>
+                </label>
+                <label class="upload-slot" data-key="roof">
+                    <input type="file" accept="image/*" hidden>
+                    <div class="slot-icon">📷</div>
+                    <div class="slot-title">Roof</div>
+                    <div class="slot-file">Drop or click</div>
+                </label>
+            </div>
+        </section>
+
+        <section class="card route-section">
+            <label for="startLocation">Where are we starting from?</label>
+            <div class="route-row">
+                <input id="startLocation" type="text" placeholder="Enter pickup/start location" />
+            </div>
+            <label for="destination">Where are we going?</label>
+            <div class="route-row">
+                <input id="destination" type="text" placeholder="Enter destination" />
+                <button id="requestRide">Request Verified Ride</button>
+            </div>
+            <div class="progress-wrap hidden" id="progressWrap">
+                <div class="progress-text">AI is inspecting vehicle structure...</div>
+                <div class="progress-bar"><span id="progressFill"></span></div>
+            </div>
+        </section>
+    </div>
+
+    <section class="overlay hidden" id="resultOverlay">
+        <article class="result-card">
+            <button id="closeOverlay" class="close-btn">✕</button>
+            <div class="badge-wrap">
+                <div id="verificationBadge" class="verification-badge"></div>
+                <div id="statusText" class="status-text">PENDING</div>
+            </div>
+
+            <div id="approvedPanel" class="panel hidden">
+                <h3>Driver Dispatched</h3>
+                <p><strong>Tier:</strong> <span id="tierValue">-</span></p>
+                <p><strong>ETA:</strong> <span id="etaValue">-</span></p>
+            </div>
+
+            <div id="rejectedPanel" class="panel hidden">
+                <h3>Vehicle Rejected</h3>
+                <p class="muted">Damaged angles detected:</p>
+                <ul id="damagedAngles"></ul>
+                <div id="heatmaps" class="heatmap-grid"></div>
+            </div>
+
+            <pre id="rawJson" class="raw-json"></pre>
+        </article>
+    </section>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

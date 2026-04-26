@@ -25,14 +25,26 @@ class FleetVisionOrchestrator:
 
     def _run_sync(self, payload: dict) -> dict:
         image_paths = payload["image_paths"]
+        start_location = payload.get("start_location")
         destination = payload["destination"]
-        return asyncio.run(self.run(image_paths=image_paths, destination=destination))
+        return asyncio.run(
+            self.run(
+                image_paths=image_paths,
+                start_location=start_location,
+                destination=destination,
+            )
+        )
 
     def chain(self) -> RunnableLambda:
         """Expose LangChain runnable for integration."""
         return self._chain
 
-    async def run(self, image_paths: Dict[str, str], destination: str) -> dict:
+    async def run(
+        self,
+        image_paths: Dict[str, str],
+        destination: str,
+        start_location: str | None = None,
+    ) -> dict:
         """Execute full workflow and return dispatch report JSON."""
         required = ["Front", "Back", "Left", "Right", "Roof"]
         missing = [k for k in required if k not in image_paths]
@@ -61,17 +73,24 @@ class FleetVisionOrchestrator:
             }
 
         # Route only when safety gate passes.
+        origin_coords = self.base_coords
+        origin_label = "fleet_base"
+        if start_location and start_location.strip():
+            origin_coords = geocode_destination(start_location.strip())
+            origin_label = start_location.strip()
+
         destination_coords = geocode_destination(destination)
-        route_details = get_ride_details(self.base_coords, destination_coords)
+        route_details = get_ride_details(origin_coords, destination_coords)
 
         return {
             "status": "APPROVED",
             "timestamp_utc": datetime.now(UTC).isoformat(),
             "tier_info": tier_info,
+            "origin": origin_label,
             "destination": destination,
             "origin_coords": {
-                "lon": self.base_coords[0],
-                "lat": self.base_coords[1],
+                "lon": origin_coords[0],
+                "lat": origin_coords[1],
             },
             "destination_coords": {
                 "lon": destination_coords[0],
