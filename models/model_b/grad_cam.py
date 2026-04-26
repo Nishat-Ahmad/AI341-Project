@@ -1,6 +1,8 @@
 """Grad-CAM implementation for damage localization."""
 from pathlib import Path
 from typing import Tuple
+from datetime import datetime, UTC
+import os
 
 import cv2
 import numpy as np
@@ -144,8 +146,13 @@ class GradCAMViT:
 
         # Save
         if output_path is None:
+            repo_root = Path(__file__).resolve().parents[2]
+            output_dir = Path(os.getenv("FLEET_HEATMAP_DIR", repo_root / "outputs" / "heatmaps"))
+            output_dir.mkdir(parents=True, exist_ok=True)
+
             img_path = Path(image_path)
-            output_path = str(img_path.parent / f"{img_path.stem}_heatmap.jpg")
+            timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+            output_path = str(output_dir / f"{img_path.stem}_{timestamp}_heatmap.jpg")
 
         cv2.imwrite(output_path, overlay)
         return output_path, overlay
