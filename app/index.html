@@ -3,94 +3,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fleet-Vision AI</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Fleet-Vision AI | Verified Dispatch</title>
+    <link rel="stylesheet" href="/static/style.css?ts=8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Animated Background - BRIGHT Floating Symbols -->
+    <div class="bg-animated" id="bgAnimated"></div>
+
     <div class="app-shell">
-        <header class="header">
-            <h1>Fleet-Vision AI <span>|</span> Verified Dispatch</h1>
-        </header>
+        <!-- Landing Page -->
+        <div class="landing-page" id="landingPage">
+            <div class="landing-brand">
+                <div class="landing-brand-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <h1 class="landing-title">Fleet-Vision</h1>
+                <p class="landing-subtitle">AI-powered vehicle inspection and verified dispatch for seamless fleet operations</p>
+            </div>
+            <div class="btn-landing-wrapper">
+                <button class="btn-landing" id="getStartedBtn">
+                    <span class="btn-text">Get Started</span>
+                    <span class="btn-arrow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </div>
 
-        <section class="upload-section card">
-            <h2>Vehicle Capture</h2>
-            <p class="muted">Upload all 5 angles or drag-and-drop each image card.</p>
-            <div class="upload-grid" id="uploadGrid">
-                <label class="upload-slot" data-key="front">
-                    <input type="file" accept="image/*" hidden>
-                    <div class="slot-icon">📷</div>
-                    <div class="slot-title">Front</div>
-                    <div class="slot-file">Drop or click</div>
-                </label>
-                <label class="upload-slot" data-key="back">
-                    <input type="file" accept="image/*" hidden>
-                    <div class="slot-icon">📷</div>
-                    <div class="slot-title">Back</div>
-                    <div class="slot-file">Drop or click</div>
-                </label>
-                <label class="upload-slot" data-key="left">
-                    <input type="file" accept="image/*" hidden>
-                    <div class="slot-icon">📷</div>
-                    <div class="slot-title">Left Side</div>
-                    <div class="slot-file">Drop or click</div>
-                </label>
-                <label class="upload-slot" data-key="right">
-                    <input type="file" accept="image/*" hidden>
-                    <div class="slot-icon">📷</div>
-                    <div class="slot-title">Right Side</div>
-                    <div class="slot-file">Drop or click</div>
-                </label>
-                <label class="upload-slot" data-key="roof">
-                    <input type="file" accept="image/*" hidden>
-                    <div class="slot-icon">📷</div>
-                    <div class="slot-title">Roof</div>
-                    <div class="slot-file">Drop or click</div>
-                </label>
+        <!-- Step 1: Upload Images -->
+        <div class="step-page" id="uploadStep">
+            <div class="step-header">
+                <h2 class="step-title">Capture Your Vehicle</h2>
+                <p class="step-subtitle">Upload all 5 angles of your vehicle for AI inspection</p>
             </div>
-        </section>
+            <div class="bento-card">
+                <div class="spotlight-container">
+                    <div class="upload-grid" id="uploadGrid">
+                        <label class="upload-slot" data-key="front">
+                            <input type="file" accept="image/*" hidden>
+                            <div class="slot-icon">
+                                <img src="/static/icons/front.svg" alt="Front">
+                            </div>
+                            <div class="slot-preview">
+                                <img src="" alt="Preview">
+                                <div class="scan-line"></div>
+                            </div>
+                            <div class="slot-title">Front</div>
+                            <div class="slot-status">tap to capture</div>
+                        </label>
+                        <label class="upload-slot" data-key="back">
+                            <input type="file" accept="image/*" hidden>
+                            <div class="slot-icon">
+                                <img src="/static/icons/back.svg" alt="Back">
+                            </div>
+                            <div class="slot-preview">
+                                <img src="" alt="Preview">
+                                <div class="scan-line"></div>
+                            </div>
+                            <div class="slot-title">Back</div>
+                            <div class="slot-status">tap to capture</div>
+                        </label>
+                        <label class="upload-slot" data-key="left">
+                            <input type="file" accept="image/*" hidden>
+                            <div class="slot-icon">
+                                <img src="/static/icons/left.svg" alt="Left">
+                            </div>
+                            <div class="slot-preview">
+                                <img src="" alt="Preview">
+                                <div class="scan-line"></div>
+                            </div>
+                            <div class="slot-title">Left</div>
+                            <div class="slot-status">tap to capture</div>
+                        </label>
+                        <label class="upload-slot" data-key="right">
+                            <input type="file" accept="image/*" hidden>
+                            <div class="slot-icon">
+                                <img src="/static/icons/left.svg" alt="Right">
+                            </div>
+                            <div class="slot-preview">
+                                <img src="" alt="Preview">
+                                <div class="scan-line"></div>
+                            </div>
+                            <div class="slot-title">Right</div>
+                            <div class="slot-status">tap to capture</div>
+                        </label>
+                        <label class="upload-slot" data-key="roof">
+                            <input type="file" accept="image/*" hidden>
+                            <div class="slot-icon">
+                                <img src="/static/icons/roof.svg" alt="Roof">
+                            </div>
+                            <div class="slot-preview">
+                                <img src="" alt="Preview">
+                                <div class="scan-line"></div>
+                            </div>
+                            <div class="slot-title">Roof</div>
+                            <div class="slot-status">tap to capture</div>
+                        </label>
+                    </div>
+                </div>
+                <div class="btn-capture-wrapper">
+                    <button id="nextToDestination" class="btn-next" disabled>
+                        <span class="btn-text">Next Step</span>
+                        <span class="btn-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-        <section class="card route-section">
-            <label for="startLocation">Where are we starting from?</label>
-            <div class="route-row">
-                <input id="startLocation" type="text" placeholder="Enter pickup/start location" />
+        <!-- Step 2: Destination -->
+        <div class="step-page" id="destinationStep">
+            <div class="step-header">
+                <h2 class="step-title">Trip Details</h2>
+                <p class="step-subtitle">Enter your pickup and destination locations</p>
             </div>
-            <label for="destination">Where are we going?</label>
-            <div class="route-row">
-                <input id="destination" type="text" placeholder="Enter destination" />
-                <button id="requestRide">Request Verified Ride</button>
+            <div class="bento-card">
+                <div class="form-group">
+                    <label class="form-label" for="startLocation">Pickup Location</label>
+                    <input class="form-input" id="startLocation" type="text" placeholder="Enter pickup/start location" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="destination">Destination</label>
+                    <input class="form-input" id="destination" type="text" placeholder="Enter destination" />
+                </div>
+                <div class="btn-group">
+                    <button id="backToUpload" class="btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Back</span>
+                    </button>
+                    <button id="submitRide" class="btn-primary">
+                        <span>Request Verified Ride</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="progress-wrap hidden" id="progressWrap">
+                    <div class="progress-label">AI is inspecting vehicle structure...</div>
+                    <div class="progress-track"><span class="progress-fill"></span></div>
+                </div>
             </div>
-            <div class="progress-wrap hidden" id="progressWrap">
-                <div class="progress-text">AI is inspecting vehicle structure...</div>
-                <div class="progress-bar"><span id="progressFill"></span></div>
-            </div>
-        </section>
+        </div>
     </div>
 
+    <!-- Result Modal -->
     <section class="overlay hidden" id="resultOverlay">
-        <article class="result-card">
+        <div class="result-card">
             <button id="closeOverlay" class="close-btn">✕</button>
-            <div class="badge-wrap">
+            
+            <div class="badge-center">
                 <div id="verificationBadge" class="verification-badge"></div>
                 <div id="statusText" class="status-text">PENDING</div>
             </div>
 
             <div id="approvedPanel" class="panel hidden">
-                <h3>Driver Dispatched</h3>
-                <p><strong>Tier:</strong> <span id="tierValue">-</span></p>
-                <p><strong>ETA:</strong> <span id="etaValue">-</span></p>
+                <h3 class="panel-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    Driver Dispatched
+                </h3>
+                <div class="info-row">
+                    <div class="info-block">
+                        <span class="info-label">Tier</span>
+                        <span class="info-value" id="tierValue">-</span>
+                    </div>
+                    <div class="info-block">
+                        <span class="info-label">ETA</span>
+                        <span class="info-value" id="etaValue">-</span>
+                    </div>
+                </div>
             </div>
 
             <div id="rejectedPanel" class="panel hidden">
-                <h3>Vehicle Rejected</h3>
+                <h3 class="panel-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    Vehicle Rejected
+                </h3>
                 <p class="muted">Damaged angles detected:</p>
-                <ul id="damagedAngles"></ul>
+                <ul class="damage-tags" id="damagedAngles"></ul>
                 <div id="heatmaps" class="heatmap-grid"></div>
             </div>
 
-            <pre id="rawJson" class="raw-json"></pre>
-        </article>
+            <div id="jsonOutput" class="json-output hidden"></div>
+            
+            <div class="btn-group" style="margin-top: var(--space-6);">
+                <button id="startOver" class="btn-secondary">
+                    <span>Start Over</span>
+                </button>
+            </div>
+        </div>
     </section>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?ts=7"></script>
+    <script>
+        // Create BRIGHT floating symbols
+        function createFloatingSymbols() {
+            const container = document.getElementById('bgAnimated');
+            const symbols = ['@', '#', '$', '%', '^', '&', '*', '+', '=', '~', '?', '!'];
+            
+            for (let i = 0; i < 40; i++) {
+                const symbol = document.createElement('div');
+                symbol.className = 'floating-symbol';
+                symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                symbol.style.left = Math.random() * 100 + '%';
+                symbol.style.animationDuration = (Math.random() * 15 + 12) + 's';
+                symbol.style.animationDelay = (Math.random() * 15) + 's';
+                symbol.style.opacity = Math.random() * 0.3 + 0.35;
+                symbol.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                container.appendChild(symbol);
+            }
+        }
+        
+        // 3D Tilt Effect for Get Started Button (with proximity detection)
+        function initTiltButton() {
+            const btn = document.getElementById('getStartedBtn');
+            if (!btn) {
+                console.error('Button not found!');
+                return;
+            }
+            console.log('Button found:', btn);
+
+            // Tilt configuration
+            const maxTiltX = 12;  // Max rotation on X axis (degrees)
+            const maxTiltY = 12;  // Max rotation on Y axis (degrees)
+            const perspective = 1000; // 3D depth
+            const proximityRange = 300; // Distance in px before button starts tilting
+
+            // Current rotation values (for smooth interpolation)
+            let currentRotateX = 0;
+            let currentRotateY = 0;
+
+            function calculateTilt(mouseX, mouseY) {
+                // Use getBoundingClientRect() to get button's position and dimensions
+                const rect = btn.getBoundingClientRect();
+                
+                // Calculate cursor position relative to button's center
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // Calculate distance from cursor to button center
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Check if cursor is within proximity range (either on button or nearby)
+                const inRange = distance < proximityRange;
+                
+                if (!inRange) {
+                    return { rotateX: 0, rotateY: 0, intensity: 0, inRange: false };
+                }
+                
+                // Calculate proximity factor (1 = at center/button, 0 = at edge of range)
+                const proximityFactor = 1 - (distance / proximityRange);
+                const clampedFactor = Math.max(0, Math.min(1, proximityFactor));
+                
+                // Normalize direction (how far from center, -1 to 1)
+                const normalizedX = dx / (rect.width / 2);
+                const normalizedY = dy / (rect.height / 2);
+                
+                // Clamp to -1 to 1
+                const clampedX = Math.max(-1, Math.min(1, normalizedX));
+                const clampedY = Math.max(-1, Math.min(1, normalizedY));
+                
+                // Calculate tilt with proximity factor applied
+                const rotateY = clampedX * maxTiltY * clampedFactor;
+                const rotateX = -clampedY * maxTiltX * clampedFactor;
+                
+                return { 
+                    rotateX, 
+                    rotateY, 
+                    intensity: clampedFactor, 
+                    inRange: true 
+                };
+            }
+
+            function animate() {
+                // Get current tilt based on mouse position
+                let targetRotateX = 0;
+                let targetRotateY = 0;
+                let intensity = 0;
+                
+                if (window._mouseX !== undefined && window._mouseY !== undefined) {
+                    const tilt = calculateTilt(window._mouseX, window._mouseY);
+                    targetRotateX = tilt.rotateX;
+                    targetRotateY = tilt.rotateY;
+                    intensity = tilt.intensity;
+                    btn._isNear = tilt.inRange;
+                }
+
+                // Smooth easing for transition (lower = smoother/slower)
+                const ease = 0.1;
+                currentRotateX += (targetRotateX - currentRotateX) * ease;
+                currentRotateY += (targetRotateY - currentRotateY) * ease;
+
+                // Apply 3D transform
+                const translateZ = btn._isNear ? intensity * 15 : 0;
+                const transform = `perspective(${perspective}px) rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) translateZ(${translateZ}px)`;
+                
+                if (btn.style.transform !== transform) {
+                    btn.style.transform = transform;
+                }
+
+                // Dynamic shadow based on tilt intensity
+                if (intensity > 0) {
+                    const shadowX = -currentRotateY * 0.8;
+                    const shadowY = currentRotateX * 0.8;
+                    const shadowIntensity = Math.sqrt(currentRotateX * currentRotateX + currentRotateY * currentRotateY) / 15;
+                    
+                    btn.style.boxShadow = `
+                        inset 0 1px 1px rgba(255, 255, 255, ${0.12 + shadowIntensity * 0.15}),
+                        inset 0 -1px 1px rgba(0, 0, 0, 0.15),
+                        0 ${18 + shadowIntensity * 12}px ${36 + shadowIntensity * 18}px rgba(60, 76, 36, ${0.35 + shadowIntensity * 0.2}),
+                        ${shadowX}px ${shadowY}px ${18 + shadowIntensity * 12}px rgba(90, 120, 50, ${0.12 + shadowIntensity * 0.15})
+                    `;
+                } else {
+                    // Default shadow when not interacting
+                    btn.style.boxShadow = `
+                        inset 0 1px 1px rgba(255, 255, 255, 0.12),
+                        inset 0 -1px 1px rgba(0, 0, 0, 0.15),
+                        0 8px 32px rgba(60, 76, 36, 0.35)
+                    `;
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            // Track global mouse position
+            document.addEventListener('mousemove', function(e) {
+                window._mouseX = e.clientX;
+                window._mouseY = e.clientY;
+            });
+
+            btn.addEventListener('mouseenter', function(e) {
+                btn._isHovering = true;
+            });
+
+            btn.addEventListener('mouseleave', function() {
+                btn._isHovering = false;
+            });
+
+            // Initialize with default shadow
+            btn.style.boxShadow = `
+                inset 0 1px 1px rgba(255, 255, 255, 0.12),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.15),
+                0 8px 32px rgba(60, 76, 36, 0.35)
+            `;
+
+            // Start animation loop
+            animate();
+        }
+
+        // 3D Tilt Effect for Upload Cards
+        function initUploadSlotTilt() {
+            const slots = document.querySelectorAll('.upload-slot');
+            if (!slots.length) return;
+
+            const maxTiltX = 6;
+            const maxTiltY = 6;
+            const perspective = 800;
+            const proximityRange = 150;
+
+            const states = {};
+            slots.forEach(slot => states[slot.dataset.key] = { currentRotateX: 0, currentRotateY: 0 });
+
+            function calculateTilt(mouseX, mouseY, rect) {
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const inRange = distance < proximityRange;
+
+                if (!inRange) return { rotateX: 0, rotateY: 0, intensity: 0, inRange: false };
+
+                const proximityFactor = 1 - (distance / proximityRange);
+                const clampedFactor = Math.max(0, Math.min(1, proximityFactor));
+                const normalizedX = dx / (rect.width / 2);
+                const normalizedY = dy / (rect.height / 2);
+
+                return {
+                    rotateX: -Math.max(-1, Math.min(1, normalizedY)) * maxTiltX * clampedFactor,
+                    rotateY: Math.max(-1, Math.min(1, normalizedX)) * maxTiltY * clampedFactor,
+                    intensity: clampedFactor,
+                    inRange: true
+                };
+            }
+
+            function animate() {
+                if (window._mouseX === undefined) {
+                    requestAnimationFrame(animate);
+                    return;
+                }
+
+                slots.forEach(slot => {
+                    const rect = slot.getBoundingClientRect();
+                    const tilt = calculateTilt(window._mouseX, window._mouseY, rect);
+                    const state = states[slot.dataset.key];
+                    const ease = 0.12;
+
+                    state.currentRotateX += (tilt.rotateX - state.currentRotateX) * ease;
+                    state.currentRotateY += (tilt.rotateY - state.currentRotateY) * ease;
+
+                    const translateZ = tilt.inRange ? tilt.intensity * 8 : 0;
+                    slot.style.transform = `perspective(${perspective}px) rotateX(${state.currentRotateX}deg) rotateY(${state.currentRotateY}deg) translateZ(${translateZ}px)`;
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // 3D Tilt Effect for Next Button
+        function initNextTiltButton() {
+            const btn = document.getElementById('nextToDestination');
+            if (!btn) return;
+
+            const maxTiltX = 8;
+            const maxTiltY = 8;
+            const perspective = 1000;
+            const proximityRange = 200;
+
+            let currentRotateX = 0;
+            let currentRotateY = 0;
+
+            function calculateTilt(mouseX, mouseY) {
+                const rect = btn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dx = mouseX - centerX;
+                const dy = mouseY - centerY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const inRange = distance < proximityRange;
+
+                if (!inRange) {
+                    return { rotateX: 0, rotateY: 0, intensity: 0, inRange: false };
+                }
+
+                const proximityFactor = 1 - (distance / proximityRange);
+                const clampedFactor = Math.max(0, Math.min(1, proximityFactor));
+                const normalizedX = dx / (rect.width / 2);
+                const normalizedY = dy / (rect.height / 2);
+                const clampedX = Math.max(-1, Math.min(1, normalizedX));
+                const clampedY = Math.max(-1, Math.min(1, normalizedY));
+
+                const rotateY = clampedX * maxTiltY * clampedFactor;
+                const rotateX = -clampedY * maxTiltX * clampedFactor;
+
+                return { rotateX, rotateY, intensity: clampedFactor, inRange: true };
+            }
+
+            function animate() {
+                let targetRotateX = 0;
+                let targetRotateY = 0;
+                let intensity = 0;
+
+                if (window._mouseX !== undefined && window._mouseY !== undefined) {
+                    const tilt = calculateTilt(window._mouseX, window._mouseY);
+                    targetRotateX = tilt.rotateX;
+                    targetRotateY = tilt.rotateY;
+                    intensity = tilt.intensity;
+                    btn._isNear = tilt.inRange;
+                }
+
+                const ease = 0.1;
+                currentRotateX += (targetRotateX - currentRotateX) * ease;
+                currentRotateY += (targetRotateY - currentRotateY) * ease;
+
+                const translateZ = btn._isNear ? intensity * 10 : 0;
+                const transform = `perspective(${perspective}px) rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) translateZ(${translateZ}px)`;
+
+                if (btn.style.transform !== transform) {
+                    btn.style.transform = transform;
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', function() {
+            createFloatingSymbols();
+            initTiltButton();
+            initNextTiltButton();
+            initUploadSlotTilt();
+        });
+    </script>
 </body>
 </html>
