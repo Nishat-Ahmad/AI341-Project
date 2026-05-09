@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  docker-build-and-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        run: docker build -t fleetthing:ci .
+
+      - name: Start container
+        run: |
+          docker run -d --name fleetthing-ci -p 7860:7860 \
+            -e ORS_API_KEY=dummy_key_for_ci \
+            fleetthing:ci
+
+      - name: Wait and check health
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:7860/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Health endpoint did not become ready in time"
+          docker logs fleetthing-ci || true
+          exit 1
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs fleetthing-ci || true
+
+      - name: Cleanup
+        if: always()
+        run: docker rm -f fleetthing-ci || true

@@ -43,3 +43,33 @@ Open the app in your browser and upload the five required images plus a destinat
 
 - Model weights are stored with Git LFS under `weights/`.
 - Dataset folders live under `data/`.
+
+## CI/CD: GitHub -> Hugging Face (Docker Space)
+
+This repository includes a Docker-based CI/CD flow:
+
+- CI workflow: `.github/workflows/ci.yml`
+	- Builds the Docker image on GitHub Actions.
+	- Runs a smoke test against `GET /health`.
+- Deploy workflow: `.github/workflows/deploy-hf-space.yml`
+	- Syncs repository content to a Hugging Face Space repo.
+	- Hugging Face then builds and runs the app from `Dockerfile`.
+
+### Required GitHub secrets
+
+Set these in your GitHub repository settings -> Secrets and variables -> Actions:
+
+- `HF_TOKEN`: Hugging Face user access token with write permission to Spaces.
+- `HF_SPACE_REPO`: Space identifier in the form `username/space-name`.
+
+### Required Hugging Face Space secret
+
+Set this in your Hugging Face Space settings -> Variables and secrets:
+
+- `ORS_API_KEY`: OpenRouteService API key used by routing service.
+
+### Deploy behavior
+
+- Any push to `main` triggers CI and deploy workflows.
+- Deploy copies files to the Space repository and pushes a commit.
+- If there are no file changes, deploy exits without creating a commit.
