@@ -1,3 +1,12 @@
+---
+title: Fleet-Vision
+emoji: 🚗
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+---
+
 Fleet-Vision
 =============
 
