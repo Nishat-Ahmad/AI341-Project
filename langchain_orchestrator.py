@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import os
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Dict
 
 from langchain_core.runnables import RunnableLambda
@@ -61,7 +61,7 @@ class FleetVisionOrchestrator:
         if damaged:
             return {
                 "status": "REJECTED",
-                "timestamp_utc": datetime.now(UTC).isoformat(),
+                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                 "tier_info": tier_info,
                 "damaged_angles": [d["angle"] for d in damaged],
                 "inspection_results": inspection_results,
@@ -84,7 +84,7 @@ class FleetVisionOrchestrator:
 
         return {
             "status": "APPROVED",
-            "timestamp_utc": datetime.now(UTC).isoformat(),
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "tier_info": tier_info,
             "origin": origin_label,
             "destination": destination,

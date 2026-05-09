@@ -1,7 +1,7 @@
 """Grad-CAM implementation for damage localization."""
 from pathlib import Path
 from typing import Tuple
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 import os
 
 import cv2
@@ -151,7 +151,7 @@ class GradCAMViT:
             output_dir.mkdir(parents=True, exist_ok=True)
 
             img_path = Path(image_path)
-            timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
             output_path = str(output_dir / f"{img_path.stem}_{timestamp}_heatmap.jpg")
 
         cv2.imwrite(output_path, overlay)
