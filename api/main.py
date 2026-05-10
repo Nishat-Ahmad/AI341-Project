@@ -21,8 +21,11 @@ outputs_dir = root_dir / "outputs"
 
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
-if outputs_dir.exists():
-    app.mount("/outputs", StaticFiles(directory=outputs_dir), name="outputs")
+
+# Ensure runtime-generated heatmaps are always served in Docker/Spaces, even if
+# the repository did not include an empty `outputs/` directory at build time.
+outputs_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/outputs", StaticFiles(directory=outputs_dir), name="outputs")
 
 app.add_middleware(
     CORSMiddleware,
