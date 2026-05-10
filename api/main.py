@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import shutil
+import os
 import tempfile
 from pathlib import Path
 import traceback
@@ -140,6 +141,22 @@ async def request_ride(
                 raise ValueError(f"Invalid or corrupted image for {angle}: {img_exc}") from img_exc
             except Exception as img_exc:  # unexpected PIL errors
                 raise ValueError(f"Failed to process image for {angle}: {img_exc}") from img_exc
+
+        # Optionally persist input images for debugging (set FLEET_SAVE_INPUTS=true)
+        try:
+            if os.getenv("FLEET_SAVE_INPUTS", "false").lower() in ("1", "true", "yes"):
+                inputs_dir = outputs_dir / "debug_inputs"
+                ts_debug = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+                dest_dir = inputs_dir / ts_debug
+                dest_dir.mkdir(parents=True, exist_ok=True)
+                for angle, pth in image_paths.items():
+                    try:
+                        shutil.copy(pth, dest_dir / f"{angle}_{Path(pth).name}")
+                    except Exception:
+                        # Don't fail the request if saving debug inputs fails
+                        pass
+        except Exception:
+            pass
 
         report = await orchestrator.run(
             image_paths=image_paths,

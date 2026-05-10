@@ -215,6 +215,76 @@
     </section>
 
     <script src="/static/app.js?ts=7"></script>
+    <!-- Debug Panel -->
+    <div id="debugButton" title="Debug" style="position:fixed;right:18px;bottom:18px;z-index:1200;">
+        <button style="background:#222;color:#fff;border-radius:10px;padding:10px 14px;border:none;box-shadow:0 6px 18px rgba(0,0,0,0.4);cursor:pointer;">🐞 Debug</button>
+    </div>
+
+    <div id="debugModal" class="overlay hidden" style="z-index:1300;">
+        <div class="result-card" style="max-width:760px;">
+            <button id="closeDebug" class="close-btn">✕</button>
+            <h3 class="panel-title">Runtime Debug Logs</h3>
+            <div style="margin-top:12px;margin-bottom:8px;display:flex;gap:8px;align-items:center;">
+                <button id="refreshLogs" class="btn-secondary">Refresh</button>
+                <span class="muted">Fetches files from <code>/debug/logs</code></span>
+            </div>
+            <div id="debugList" style="max-height:420px;overflow:auto;padding-top:8px;">
+                <p class="muted">No logs found.</p>
+            </div>
+            <div class="btn-group" style="margin-top:var(--space-4);">
+                <button id="closeDebug2" class="btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchLogs() {
+            const listEl = document.getElementById('debugList');
+            listEl.innerHTML = '<p class="muted">Loading…</p>';
+            try {
+                const res = await fetch('/debug/logs');
+                if (!res.ok) throw new Error('Failed to list logs');
+                const data = await res.json();
+                if (!data.logs || data.logs.length === 0) {
+                    listEl.innerHTML = '<p class="muted">No logs found.</p>';
+                    return;
+                }
+                const ul = document.createElement('ul');
+                ul.style.listStyle = 'none';
+                ul.style.padding = '0';
+                data.logs.forEach(l => {
+                    const li = document.createElement('li');
+                    li.style.display = 'flex';
+                    li.style.justifyContent = 'space-between';
+                    li.style.alignItems = 'center';
+                    li.style.padding = '8px 4px';
+                    const a = document.createElement('a');
+                    a.href = `/debug/logs/${encodeURIComponent(l.name)}`;
+                    a.textContent = l.name;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    const size = document.createElement('span');
+                    size.className = 'muted';
+                    size.textContent = `${l.size} bytes`;
+                    li.appendChild(a);
+                    li.appendChild(size);
+                    ul.appendChild(li);
+                });
+                listEl.innerHTML = '';
+                listEl.appendChild(ul);
+            } catch (err) {
+                listEl.innerHTML = `<p class="muted">Error: ${err.message}</p>`;
+            }
+        }
+
+        document.getElementById('debugButton').addEventListener('click', () => {
+            document.getElementById('debugModal').classList.remove('hidden');
+            fetchLogs();
+        });
+        document.getElementById('closeDebug').addEventListener('click', () => document.getElementById('debugModal').classList.add('hidden'));
+        document.getElementById('closeDebug2').addEventListener('click', () => document.getElementById('debugModal').classList.add('hidden'));
+        document.getElementById('refreshLogs').addEventListener('click', fetchLogs);
+    </script>
     <script>
         // Create BRIGHT floating symbols
         function createFloatingSymbols() {
