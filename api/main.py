@@ -102,7 +102,6 @@ async def request_ride(
     back: UploadFile = File(...),
     left: UploadFile = File(...),
     right: UploadFile = File(...),
-    roof: UploadFile = File(...),
     start_location: str = Form(...),
     destination: str = Form(...),
 ) -> dict:
@@ -119,7 +118,6 @@ async def request_ride(
             "Back": back,
             "Left": left,
             "Right": right,
-            "Roof": roof,
         }
 
         image_paths: dict[str, str] = {}

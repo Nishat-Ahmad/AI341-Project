@@ -3,7 +3,6 @@ const slotConfig = [
     { key: 'back', label: 'Back' },
     { key: 'left', label: 'Left Side' },
     { key: 'right', label: 'Right Side' },
-    { key: 'roof', label: 'Roof' },
 ];
 
 const files = new Map();
@@ -353,7 +352,6 @@ async function submitRequest() {
     formData.append('back', files.get('back'));
     formData.append('left', files.get('left'));
     formData.append('right', files.get('right'));
-    formData.append('roof', files.get('roof'));
     formData.append('start_location', startLocationInput.value.trim());
     formData.append('destination', destinationInput.value.trim());
 

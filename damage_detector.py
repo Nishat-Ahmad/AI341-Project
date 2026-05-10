@@ -7,7 +7,7 @@ from typing import Dict, List
 from models.model_b.grad_cam import generate_damage_heatmap
 from models.model_b.inference import classify_damage
 
-ANGLE_ORDER = ["Front", "Back", "Left", "Right", "Roof"]
+ANGLE_ORDER = ["Front", "Back", "Left", "Right"]
 
 
 async def inspect_angle(angle: str, image_path: str, model_path: str) -> dict:

@@ -46,7 +46,7 @@ class FleetVisionOrchestrator:
         start_location: str | None = None,
     ) -> dict:
         """Execute full workflow and return dispatch report JSON."""
-        required = ["Front", "Back", "Left", "Right", "Roof"]
+        required = ["Front", "Back", "Left", "Right"]
         missing = [k for k in required if k not in image_paths]
         if missing:
             raise ValueError(f"Missing required angles: {missing}")
