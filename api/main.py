@@ -38,7 +38,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-orchestrator = FleetVisionOrchestrator()
+# Ensure logs dir exists and write a startup marker before heavy initialization
+logs_dir = outputs_dir / "logs"
+logs_dir.mkdir(parents=True, exist_ok=True)
+ts_start = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+startup_marker = logs_dir / f"server_start_{ts_start}.log"
+with startup_marker.open("w", encoding="utf-8") as f:
+    f.write(f"Server process starting at {ts_start}\n")
+
+# Instantiate orchestrator inside try/except so startup exceptions are captured
+try:
+    orchestrator = FleetVisionOrchestrator()
+except Exception as exc:
+    tb = traceback.format_exc()
+    err_path = logs_dir / f"startup_traceback_{ts_start}.log"
+    with err_path.open("w", encoding="utf-8") as ef:
+        ef.write(f"Exception during orchestrator init: {exc}\n\n")
+        ef.write(tb)
+    # Re-raise so the runtime logs also capture the error
+    raise
 
 
 @app.get("/debug/logs")
