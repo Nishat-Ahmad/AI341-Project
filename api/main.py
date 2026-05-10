@@ -17,6 +17,13 @@ from fastapi.staticfiles import StaticFiles
 from langchain_orchestrator import FleetVisionOrchestrator
 from utils.routing_service import RoutingServiceError
 
+import warnings
+import logging
+
+# Hide the Transformers/HuggingFace noise
+warnings.filterwarnings("ignore", category=FutureWarning)
+logging.getLogger("transformers").setLevel(logging.ERROR)
+
 app = FastAPI(title="Fleet-Vision API", version="1.0.0")
 
 root_dir = Path(__file__).resolve().parents[1]
