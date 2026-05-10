@@ -41,6 +41,29 @@ app.add_middleware(
 orchestrator = FleetVisionOrchestrator()
 
 
+@app.get("/debug/logs")
+async def list_logs() -> dict:
+    """Return a list of log filenames under the outputs/logs directory."""
+    logs_dir = outputs_dir / "logs"
+    if not logs_dir.exists():
+        return {"logs": []}
+    files = []
+    for p in sorted(logs_dir.iterdir(), key=lambda x: x.name):
+        if p.is_file():
+            files.append({"name": p.name, "size": p.stat().st_size})
+    return {"logs": files}
+
+
+@app.get("/debug/logs/{name}")
+async def get_log(name: str) -> FileResponse:
+    """Serve a specific log file from outputs/logs safely."""
+    safe_name = Path(name).name
+    log_path = outputs_dir / "logs" / safe_name
+    if not log_path.exists() or not log_path.is_file():
+        raise HTTPException(status_code=404, detail="Log not found")
+    return FileResponse(log_path)
+
+
 @app.get("/health")
 async def health() -> dict:
     return {"status": "healthy"}
