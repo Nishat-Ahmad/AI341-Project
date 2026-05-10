@@ -4,6 +4,8 @@ from __future__ import annotations
 import shutil
 import tempfile
 from pathlib import Path
+import traceback
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -101,6 +103,20 @@ async def request_ride(
     except HTTPException:
         raise
     except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=500, detail=f"Internal error: {exc}") from exc
+        try:
+            logs_dir = outputs_dir / "logs"
+            logs_dir.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+            tb_text = traceback.format_exc()
+            meta = {"image_paths": image_paths if "image_paths" in locals() else None}
+            log_path = logs_dir / f"traceback_{ts}.log"
+            with log_path.open("w", encoding="utf-8") as lf:
+                lf.write(f"Exception: {exc}\n\n")
+                lf.write(f"Meta: {meta}\n\n")
+                lf.write(tb_text)
+            detail_msg = f"Internal error; traceback written to /outputs/logs/{log_path.name}"
+        except Exception:
+            detail_msg = "Internal error; failed to write traceback."
+        raise HTTPException(status_code=500, detail=detail_msg) from exc
     finally:
         shutil.rmtree(temp_dir, ignore_errors=True)
