@@ -8,6 +8,7 @@ import traceback
 from datetime import datetime, timezone
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from PIL import Image, UnidentifiedImageError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -88,6 +89,16 @@ async def request_ride(
             with output_path.open("wb") as f:
                 shutil.copyfileobj(upload.file, f)
             image_paths[angle] = str(output_path)
+
+        # Validate saved images to catch corrupted/unsupported uploads early
+        for angle, path_str in image_paths.items():
+            try:
+                with Image.open(path_str) as im:
+                    im.verify()
+            except UnidentifiedImageError as img_exc:
+                raise ValueError(f"Invalid or corrupted image for {angle}: {img_exc}") from img_exc
+            except Exception as img_exc:  # unexpected PIL errors
+                raise ValueError(f"Failed to process image for {angle}: {img_exc}") from img_exc
 
         report = await orchestrator.run(
             image_paths=image_paths,
