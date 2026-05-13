@@ -48,6 +48,10 @@ Open the app in your browser and upload the five required images plus a destinat
 - [damage_detector.py](damage_detector.py): Model B wrapper
 - [utils/routing_service.py](utils/routing_service.py): ORS routing and geocoding
 
+## Model Documentation
+
+For detailed Model A and Model B architectures, hyperparameters, evaluation metrics, and training guides, see [models/README.md](models/README.md).
+
 ## Notes
 
 - Model weights are stored with Git LFS under `weights/`.

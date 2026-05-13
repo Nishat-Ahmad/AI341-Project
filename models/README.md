@@ -123,7 +123,116 @@ Install: `pip install -r requirements.txt`
 
 ## Model B: Damage Assessment Classifier
 
-*(Coming soon)*
+A Swin-based binary damage detector that classifies a vehicle image as either `Whole` or `Damaged` and can also produce a Grad-CAM heatmap for damaged results.
+
+### Architecture
+
+- **Base Model**: `microsoft/swin-tiny-patch4-window7-224`
+- **Backbone**: Frozen transformer backbone
+- **Custom Head**: Hugging Face image classification head with 2 output labels
+- **Loss**: CrossEntropyLoss
+- **Optimizer**: AdamW
+- **Training Focus**: Recall-oriented checkpoint selection to reduce missed damage cases
+
+### Supported Classes
+
+1. Whole
+2. Damaged
+
+### Dataset
+
+The training pipeline supports two layouts:
+
+```
+data/model b/
+├── train/
+│   ├── Whole/
+│   └── Damaged/
+└── valid/
+    ├── Whole/
+    └── Damaged/
+```
+
+It can also read a `damage_assessment` layout with `samples.json` and a `data/` folder, plus optional `whole_pool/`, `Whole/`, or `train/Whole` / `valid/Whole` negatives.
+
+### Performance
+
+Model B is tuned primarily for damage detection recall, so the best checkpoint is saved when validation recall improves. This is intended to avoid false negatives where a damaged vehicle is incorrectly treated as safe.
+
+### Quick Start
+
+#### Train
+```bash
+cd d:\Code\FleetThing
+python models\model_b\main.py --epochs 15 --batch-size 32 --recall-weight 2.0
+```
+
+#### Custom Parameters
+```bash
+python models\model_b\main.py \
+  --epochs 20 \
+  --batch-size 16 \
+  --learning-rate 0.0001 \
+  --recall-weight 2.0
+```
+
+#### Inference
+```python
+from models.model_b.inference import classify_damage
+
+status, confidence = classify_damage(
+    'path/to/car_image.jpg',
+    model_path='weights/model b/best_damage_detector.pth'
+)
+print(f"Status: {status}, Confidence: {confidence:.2%}")
+```
+
+#### Heatmap Generation
+```python
+from models.model_b.grad_cam import generate_damage_heatmap
+
+heatmap_path, heatmap = generate_damage_heatmap(
+    image_path='path/to/car_image.jpg',
+    model_path='weights/model b/best_damage_detector.pth',
+)
+print(heatmap_path)
+```
+
+### Module Structure
+
+```
+model_b/
+├── __init__.py          # Package exports
+├── config.py            # Constants & TrainConfig
+├── data.py              # Datasets, splits, and transforms
+├── model.py             # Swin image classifier
+├── train.py             # Training loop
+├── evaluate.py          # Metrics & evaluation
+├── inference.py         # Inference & model loading
+├── grad_cam.py          # Heatmap generation
+├── inspection.py        # Multi-angle inspection helpers
+└── main.py              # CLI entry point
+```
+
+### Weights
+
+Trained model checkpoint: `weights/model b/best_damage_detector.pth`
+
+Contains:
+- `model_state_dict`
+- `best_val_recall`
+- `best_val_acc`
+
+### Requirements
+
+- PyTorch
+- torchvision
+- transformers
+- scikit-learn (for metrics)
+- Pillow (for image loading)
+- OpenCV (for heatmap rendering)
+
+Install: `pip install -r requirements.txt`
 
 ---
 
